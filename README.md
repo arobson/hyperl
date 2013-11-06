@@ -2,9 +2,9 @@
 Hypermedia API middleware for Elli. This is proof-of-concept quality. It's bug ridden and everything is very much subject to change. I hope you'll weigh in if you have opinions.
 
 ## Concept
-HTTP middleware should isolate HTTP implementation from the application logic. Elli has excellent middleware support that should allow for all HTTP concerns to be handled without resource processes having to provide specialized responses.
+HTTP middleware should isolate HTTP implementation details from the application logic. Elli has excellent middleware support that should allow for all HTTP concerns to be handled without resource processes having to provide specialized responses.
 
-This particular approach expects you to provide metadata that defines how to render a resource, its actions an any embedded children. 
+This particular approach expects you to provide metadata that defines how to render a resource, its actions and any embedded children. 
 
 This middleware has a ways to go. See the To Do section for more details.
 
@@ -17,7 +17,7 @@ Add the following to {deps, []} in your rebar.config:
 ```
 
 ## Adding To Your Supervisor
-At the moment, Hyperl includes a gen_server to keep around calculated routes (so that they aren't recalculated for every request). This is a little gross but until I work out a better approach, this is how to spin it up:
+At the moment, Hyperl includes a gen_server that owns the ETS table where route maps are stored. This is done partly to prevent constant re-calculation of routes for every request and also to put ETS ownership someplace stable. In the future there will probably be calls added to the route_server to make it worth while.
 
 ```erlang
 MetadataModules = [parent], %% the list of metadata resources
@@ -65,6 +65,7 @@ For now, the primary implementation detail that leaks into the actions is the ne
 ## Defining Resource Metadata
 Each resource should provide metadata as a seperate module. The following example demonstrates both the 
 
+```erlang
 -module(resource_type).
 -export([metadata/0]).
 
@@ -124,3 +125,7 @@ metadata() ->
 			]}
 		]}
 	].
+```
+
+## To Do
+ * Make a proper to-do (METATODO)
