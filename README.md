@@ -128,4 +128,6 @@ metadata() ->
 ```
 
 ## To Do
- * Make a proper to-do (METATODO)
+ * Add support for template only hypermedia to generate slimmer responses
+ * Fix defect in method filters on embedded resources
+ * Add roles so that actions can be filtered based on caller role
