@@ -2,7 +2,7 @@
 %%% @copyright 2013
 %%% @doc
 %%%
-%%% 
+%%% This module renders hypermedia responses based on metadata.
 %%% 
 %%% @end
 %%% Licensed under the MIT license - http://www.opensource.org/licenses/mit-license
@@ -11,7 +11,7 @@
 -module(hal).
 -export([render/3]).
 
-%% Renders the Model's hypermedia as the given Resource : Action
+%% @doc Renders the Model's hypermedia as the given Resource : Action
 %% The rendered result is a proplist (abstract) that can be translated
 %% to specific content types (JSON, XML).
 -spec render(Resource::atom(), Action::atom(), Model::term()) -> [term()].

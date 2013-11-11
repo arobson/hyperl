@@ -16,17 +16,6 @@ Add the following to {deps, []} in your rebar.config:
 	{branch, "master"} } }
 ```
 
-## Adding To Your Supervisor
-At the moment, Hyperl includes a gen_server that owns the ETS table where route maps are stored. This is done partly to prevent constant re-calculation of routes for every request and also to put ETS ownership someplace stable. In the future there will probably be calls added to the route_server to make it worth while.
-
-```erlang
-MetadataModules = [parent], %% the list of metadata resources
-Hyperl = {hyperl_sup,
-			{hyperl_sup, start_link, [MetadataModules]}, 
-			permanent, 1000, supervisor, [hyperl_sup]
-		}.
-```
-
 ## Wiring Into Elli
 The following block demonstrates the entire setup (including the previous supervisor setup).
 ```erlang
@@ -36,16 +25,20 @@ init([]) ->
 	MaxSecondsBetweenRestarts = 60,
 	SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
+	%% the list of resource modules get passed to configure
+	Hyperl = hyperl:configure([parent]), 
+
 	MWConfig = [{mods, [
-		{hal_middleware, []}
+		Hyperl %% just place this in the list of middleware modules
 	]}],
+	
 	ElliOpts = [{callback, elli_middleware}, {port, 8090}, {callback_args, MWConfig}],
 	Elli = {elli,
 		{elli, start_link, [ElliOpts]},
 		permanent, 1000, worker, [elli]
 	}
 
-	MetadataModules = [parent], %% the list of metadata resources
+	
 	Hyperl = {hyperl_sup,
 		{hyperl_sup, start_link, [MetadataModules]}, 
 		permanent, 1000, supervisor, [hyperl_sup]
